@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": {
+    "CompanyWatchListDb": "Data Source=CompanyWatchList.db"
+  },
+  "Secret":  "Th!s !s my s3cr3t k3y for th!s Comp@ny W@tchl1st @ppl!c@t!on"
+}
