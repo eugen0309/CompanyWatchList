@@ -11,6 +11,7 @@ using CompanyWatchList.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CompanyWatchList.Controllers
@@ -23,51 +24,60 @@ namespace CompanyWatchList.Controllers
         private IUserService _userService;
         private readonly IConfiguration _config;
         private IMapper _mapper;
+        private ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService, IConfiguration config, IMapper mapper)
+        public UsersController(IUserService userService, IConfiguration config, IMapper mapper, ILogger<UsersController> logger)
         {
             _userService = userService;
             _config = config;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]AuthenticationModel input)
         {
-            var user = _userService.Authenticate(input.UserName, input.Password);
-            if (user == null)
-                return BadRequest("Incorrect username or password");
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config["Secret"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                var user = _userService.Authenticate(input.UserName, input.Password);
+                if (user == null)
+                    return BadRequest("Incorrect username or password");
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_config["Secret"]);
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new
+                return Ok(new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.FirstName,
+                    user.LastName,
+                    Token = tokenString
+                });
+            }
+            catch (Exception ex)
             {
-                user.Id,
-                user.UserName,
-                user.FirstName,
-                user.LastName,
-                Token = tokenString
-            });
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
         }
                         
         [HttpPost("register")]
         async public Task<IActionResult> Register([FromBody] RegistrationModel model)
         {
             var user = _mapper.Map<User>(model);
-
             try
             {
                 await _userService.CreateAsync(user, model.Password);
@@ -75,7 +85,8 @@ namespace CompanyWatchList.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                _logger.LogError(ex.Message);
+                return BadRequest();
             }
         }
         
@@ -83,37 +94,61 @@ namespace CompanyWatchList.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
-            var model = _mapper.Map<IList<UserModel>>(users);
-            return Ok(model);
+            try
+            {
+                var users = _userService.GetAll();
+                var model = _mapper.Map<IList<UserModel>>(users);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return NotFound();
+            }
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetById(int id)
         {
-            var user = _userService.GetById(id);
-            if (user != null)
+            try
             {
-                var model = _mapper.Map<UserModel>(user);
-                return Ok(model);
+                var user = _userService.GetById(id);
+                if (user != null)
+                {
+                    var model = _mapper.Map<UserModel>(user);
+                    return Ok(model);
+                }
+                else
+                {
+                    return NotFound("The required user was not found");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound("The required user was not found");
+                _logger.LogError(ex.Message);
+                return NotFound();
             }
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (await _userService.DeleteAsync(id))
+            try
             {
-                return Ok();
+                if (await _userService.DeleteAsync(id))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound("Couldn't delete the specified user");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound("Couldn't delete the specified user");
-            }            
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
         }
     }
 }
