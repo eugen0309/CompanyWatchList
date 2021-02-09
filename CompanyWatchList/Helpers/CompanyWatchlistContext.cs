@@ -1,6 +1,5 @@
 ﻿using CompanyWatchList.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CompanyWatchList.Helpers
 {
