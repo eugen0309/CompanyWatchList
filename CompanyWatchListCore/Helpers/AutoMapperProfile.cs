@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CompanyWatchListCore.Entities;
+using CompanyWatchListEF.Entities;
 using CompanyWatchListCore.Models;
 
 namespace CompanyWatchListCore.Helpers
@@ -11,7 +11,7 @@ namespace CompanyWatchListCore.Helpers
             CreateMap<User, UserModel>();
             CreateMap<RegistrationModel, User>()
                 .ForMember(dst => dst.UserRoles, opt => opt.Ignore());
-                                
+            CreateMap<Company, CompanyModel>();                                
         }
     }
 }

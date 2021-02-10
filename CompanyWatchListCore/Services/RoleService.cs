@@ -1,4 +1,4 @@
-﻿using CompanyWatchListCore.Entities;
+﻿using CompanyWatchListEF.Entities;
 using CompanyWatchListEF;
 using System.Collections.Generic;
 using System.Linq;

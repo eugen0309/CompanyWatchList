@@ -3,14 +3,16 @@ using System;
 using CompanyWatchListEF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CompanyWatchListCore.Migrations
 {
     [DbContext(typeof(CompanyWatchlistContext))]
-    partial class CompanyWatchlistContextModelSnapshot : ModelSnapshot
+    [Migration("20210210205328_CompanyAndWatchlist")]
+    partial class CompanyAndWatchlist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

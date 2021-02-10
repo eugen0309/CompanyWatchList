@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace CompanyWatchListCore.Entities
+namespace CompanyWatchListEF.Entities
 {
     public class UserRole : IdentityUserRole<int>
     {

@@ -1,4 +1,4 @@
-﻿using CompanyWatchListCore.Entities;
+﻿using CompanyWatchListEF.Entities;
 using static CompanyWatchListCore.Helpers.Hashing;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -11,14 +11,12 @@ using CompanyWatchListEF;
 namespace CompanyWatchListCore.Services
 {
     public class UserService : IUserService
-    {
-        private readonly IConfiguration _config;
+    {        
         private CompanyWatchlistContext _context;
         private readonly IRoleService _roleService;
 
-        public UserService(IConfiguration config, CompanyWatchlistContext context, IRoleService roleService)
-        {
-            _config = config;
+        public UserService(CompanyWatchlistContext context, IRoleService roleService)
+        {            
             _context = context;
             _roleService = roleService;
         }
@@ -71,6 +69,11 @@ namespace CompanyWatchListCore.Services
         public User GetById(int id)
         {
             return _context.Users.Find(id);
+        }
+
+        public User GetByUserName(string userName)
+        {
+            return _context.Users.FirstOrDefault(u => u.UserName == userName);
         }
 
         public async Task<bool> DeleteAsync(int id)

@@ -1,5 +1,5 @@
 ﻿
-using CompanyWatchListCore.Entities;
+using CompanyWatchListEF.Entities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

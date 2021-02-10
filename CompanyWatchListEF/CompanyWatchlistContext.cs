@@ -1,4 +1,4 @@
-﻿using CompanyWatchListCore.Entities;
+﻿using CompanyWatchListEF.Entities;
 using CompanyWatchListCore.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,5 +69,7 @@ namespace CompanyWatchListEF
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<UserWatchlist> UserWatchlists { get; set; }
     }
 }

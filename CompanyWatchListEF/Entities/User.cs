@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CompanyWatchListCore.Entities
+namespace CompanyWatchListEF.Entities
 {
     public class User
     {

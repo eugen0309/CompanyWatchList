@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using CompanyWatchListCore.Entities;
+using CompanyWatchListEF.Entities;
 using CompanyWatchListCore.Models;
 using CompanyWatchListCore.Services;
 using Microsoft.AspNetCore.Authorization;
