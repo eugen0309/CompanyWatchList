@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace CompanyWatchList.Entities
+namespace CompanyWatchListCore.Entities
 {
     public class Role : IdentityRole<int>
     {

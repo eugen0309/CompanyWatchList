@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CompanyWatchList.Models
+namespace CompanyWatchListCore.Models
 {
     public class AuthenticationModel
     {

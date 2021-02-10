@@ -1,8 +1,8 @@
-﻿using CompanyWatchList.Entities;
+﻿using CompanyWatchListCore.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CompanyWatchList.Services
+namespace CompanyWatchListCore.Services
 {
     public interface IRoleService
     {        

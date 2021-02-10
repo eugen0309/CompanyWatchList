@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using CompanyWatchList.Entities;
-using CompanyWatchList.Models;
-using CompanyWatchList.Services;
-using System.Collections.Generic;
+using CompanyWatchListCore.Entities;
+using CompanyWatchListCore.Models;
 
-namespace CompanyWatchList.Helpers
+namespace CompanyWatchListCore.Helpers
 {
     public class AutoMapperProfile : Profile
     {

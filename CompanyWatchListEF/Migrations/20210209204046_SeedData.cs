@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CompanyWatchList.Migrations
+namespace CompanyWatchListCore.Migrations
 {
     public partial class SeedData : Migration
     {

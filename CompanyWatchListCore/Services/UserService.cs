@@ -1,14 +1,14 @@
-﻿using CompanyWatchList.Entities;
-using CompanyWatchList.Helpers;
-using static CompanyWatchList.Helpers.Hashing;
+﻿using CompanyWatchListCore.Entities;
+using static CompanyWatchListCore.Helpers.Hashing;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using CompanyWatchListEF;
 
-namespace CompanyWatchList.Services
+namespace CompanyWatchListCore.Services
 {
     public class UserService : IUserService
     {

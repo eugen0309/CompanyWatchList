@@ -1,9 +1,9 @@
 ﻿
-using CompanyWatchList.Entities;
+using CompanyWatchListCore.Entities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace CompanyWatchList.Models
+namespace CompanyWatchListCore.Models
 {
     public class RegistrationModel
     {

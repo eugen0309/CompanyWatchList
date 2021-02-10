@@ -1,11 +1,10 @@
-﻿using CompanyWatchList.Entities;
-using CompanyWatchList.Helpers;
-using System;
+﻿using CompanyWatchListCore.Entities;
+using CompanyWatchListEF;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CompanyWatchList.Services
+namespace CompanyWatchListCore.Services
 {
     public class RoleService : IRoleService
     {

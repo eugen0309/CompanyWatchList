@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace CompanyWatchList.Helpers
+namespace CompanyWatchListCore.Helpers
 {
-    internal static class Hashing
+    public static class Hashing
     {
-        internal static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("missing password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Password cannot be empty or white space", "password");
@@ -22,7 +22,7 @@ namespace CompanyWatchList.Helpers
             return true;
         }
 
-        internal static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Password cannot be empty or white space", "password");

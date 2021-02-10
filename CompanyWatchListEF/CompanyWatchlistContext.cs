@@ -1,10 +1,8 @@
-﻿using CompanyWatchList.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using CompanyWatchListCore.Entities;
+using CompanyWatchListCore.Helpers;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace CompanyWatchList.Helpers
+namespace CompanyWatchListEF
 {
     public class CompanyWatchlistContext : DbContext
     {
@@ -66,10 +64,6 @@ namespace CompanyWatchList.Helpers
                 RoleId = 1,
                 UserId = 1
             });
-               
-                
-             
-
         }
                
         public DbSet<User> Users { get; set; }
