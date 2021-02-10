@@ -46,12 +46,10 @@ namespace CompanyWatchList.Controllers
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_config["Secret"]);
+                Claim[] claims = GenerateClaims(user);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                    }),
+                    Subject = new ClaimsIdentity(claims),
                     Expires = DateTime.UtcNow.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
@@ -73,14 +71,16 @@ namespace CompanyWatchList.Controllers
                 return BadRequest();
             }
         }
-                        
+
+
         [HttpPost("register")]
+        [Authorize(Roles = "Admin")]
         async public Task<IActionResult> Register([FromBody] RegistrationModel model)
         {
             var user = _mapper.Map<User>(model);
             try
             {
-                await _userService.CreateAsync(user, model.Password);
+                var createdUser = await _userService.CreateAsync(user, model.Password, model.UserRoles);
                 return Ok();
             }
             catch (Exception ex)
@@ -131,7 +131,8 @@ namespace CompanyWatchList.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             try
             {
@@ -149,6 +150,21 @@ namespace CompanyWatchList.Controllers
                 _logger.LogError(ex.Message);
                 return BadRequest();
             }
+        }
+
+
+        private static Claim[] GenerateClaims(User user)
+        {
+            Claim[] claims = new Claim[user.UserRoles.Count + 1];
+            var i = 0;
+            claims[i] = new Claim(ClaimTypes.Name, user.UserName.ToString());
+            foreach (var role in user.UserRoles)
+            {
+                i++;
+                claims[i] = new Claim(ClaimTypes.Role, role.Role.Name);
+            }
+
+            return claims;
         }
     }
 }

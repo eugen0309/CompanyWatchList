@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CompanyWatchList.Services
 {
@@ -13,10 +14,13 @@ namespace CompanyWatchList.Services
     {
         private readonly IConfiguration _config;
         private CompanyWatchlistContext _context;
-        public UserService(IConfiguration config, CompanyWatchlistContext context)
+        private readonly IRoleService _roleService;
+
+        public UserService(IConfiguration config, CompanyWatchlistContext context, IRoleService roleService)
         {
             _config = config;
             _context = context;
+            _roleService = roleService;
         }
 
         public User Authenticate(string username, string password)
@@ -24,18 +28,22 @@ namespace CompanyWatchList.Services
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.Users.SingleOrDefault(u => u.UserName == username);
+            var user = _context.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .SingleOrDefault(u => u.UserName == username);
             if (user == null)
                 return null;
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 return null;
-    
+
+          
             return user;
         }
 
 
-        public async Task<User> CreateAsync(User user, string password)
+        public async Task<User> CreateAsync(User user, string password, ICollection<string> roles)
         {
             if (string.IsNullOrWhiteSpace(password))
                 throw new Exception("Password is required");
@@ -47,11 +55,13 @@ namespace CompanyWatchList.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
+
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
+            await AddUserRoles(user, roles);
 
             return user;
-        }
+        }        
 
         public IEnumerable<User> GetAll()
         {
@@ -75,6 +85,21 @@ namespace CompanyWatchList.Services
             else
             {
                 return false;
+            }
+        }
+
+        private async Task AddUserRoles(User user, ICollection<string> roles)
+        {
+            if (roles == null || roles.Count == 0)
+            {
+                await _roleService.AddUserToRoleAsync(user.Id, "User");
+            }
+            else
+            {
+                foreach (var roleName in roles)
+                {
+                    await _roleService.AddUserToRoleAsync(user.Id, roleName);
+                }
             }
         }
     }

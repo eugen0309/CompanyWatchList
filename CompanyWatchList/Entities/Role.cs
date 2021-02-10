@@ -1,8 +1,10 @@
-﻿namespace CompanyWatchList.Entities
+﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+
+namespace CompanyWatchList.Entities
 {
-    public class Role
+    public class Role : IdentityRole<int>
     {
-        public const string Admin = "Admin";
-        public const string User = "User";
+        public ICollection<UserRole> UserRoles { get; set; }
     }
 }

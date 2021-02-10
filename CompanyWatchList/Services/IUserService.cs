@@ -9,7 +9,7 @@ namespace CompanyWatchList.Services
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User GetById(int id);
-        Task<User> CreateAsync(User user, string password);
+        Task<User> CreateAsync(User user, string password, ICollection<string> roles);
         Task<bool> DeleteAsync(int id);
     }
 }

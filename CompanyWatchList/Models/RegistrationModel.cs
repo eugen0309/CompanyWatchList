@@ -1,4 +1,6 @@
 ﻿
+using CompanyWatchList.Entities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CompanyWatchList.Models
@@ -15,5 +17,6 @@ namespace CompanyWatchList.Models
         public string LastName { get; set; }
         [Required]
         public string Password { get; set; }        
+        public ICollection<string> UserRoles { get; set; }
     }
 }

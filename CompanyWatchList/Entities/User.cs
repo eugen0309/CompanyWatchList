@@ -1,4 +1,6 @@
-﻿namespace CompanyWatchList.Entities
+﻿using System.Collections.Generic;
+
+namespace CompanyWatchList.Entities
 {
     public class User
     {
@@ -8,7 +10,7 @@
         public string FirstName { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public string Role { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         public string Token { get; set; }
     }
 }

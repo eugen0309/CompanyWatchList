@@ -18,7 +18,7 @@ namespace CompanyWatchList.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    Role = table.Column<string>(type: "TEXT", nullable: true),
+                    //Role = table.Column<string>(type: "TEXT", nullable: true),
                     Token = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
