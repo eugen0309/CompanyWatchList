@@ -16,6 +16,23 @@ namespace CompanyWatchListCore.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.12");
 
+            modelBuilder.Entity("CompanyWatchListEF.Entities.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Symbol")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("CompanyWatchListEF.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -39,14 +56,14 @@ namespace CompanyWatchListCore.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "7b8da9a4-e331-4a03-8cc0-a2a301b8bdb3",
+                            ConcurrencyStamp = "2921fced-95aa-456e-b471-492e151e11b9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "741cc9fa-a919-43a0-9180-fb6290ffaf69",
+                            ConcurrencyStamp = "ac29b737-4834-4dc5-a915-703955cc223c",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -86,8 +103,8 @@ namespace CompanyWatchListCore.Migrations
                             Id = 1,
                             FirstName = "Eugen",
                             LastName = "Stancioiu",
-                            PasswordHash = new byte[] { 135, 135, 56, 235, 103, 9, 84, 205, 234, 201, 180, 49, 3, 3, 249, 117, 137, 26, 59, 38, 152, 87, 52, 232, 207, 109, 94, 241, 126, 95, 206, 17, 100, 254, 30, 138, 219, 196, 53, 207, 50, 135, 79, 31, 79, 115, 1, 138, 55, 102, 51, 10, 170, 176, 108, 49, 40, 66, 157, 42, 112, 202, 10, 166 },
-                            PasswordSalt = new byte[] { 126, 112, 64, 153, 138, 152, 222, 196, 111, 253, 2, 71, 222, 179, 208, 253, 105, 113, 63, 205, 69, 96, 81, 63, 15, 137, 204, 65, 205, 115, 109, 251, 239, 253, 7, 190, 181, 234, 86, 126, 169, 111, 92, 22, 249, 135, 120, 121, 152, 112, 31, 224, 81, 85, 219, 15, 255, 59, 43, 139, 139, 71, 82, 84, 127, 254, 178, 236, 240, 18, 189, 174, 162, 130, 236, 29, 103, 229, 100, 22, 52, 88, 149, 201, 23, 100, 73, 162, 59, 230, 245, 126, 95, 89, 162, 100, 125, 154, 2, 241, 211, 130, 203, 235, 196, 135, 183, 36, 44, 15, 31, 164, 7, 132, 254, 57, 129, 247, 38, 141, 32, 151, 201, 223, 119, 4, 137, 53 },
+                            PasswordHash = new byte[] { 2, 147, 212, 4, 118, 43, 75, 64, 8, 12, 229, 211, 56, 99, 59, 16, 88, 118, 208, 43, 216, 19, 168, 39, 175, 237, 44, 184, 140, 177, 238, 171, 235, 21, 36, 245, 241, 78, 106, 44, 43, 61, 19, 112, 255, 163, 57, 246, 159, 75, 136, 26, 243, 170, 201, 31, 126, 42, 89, 7, 203, 22, 132, 128 },
+                            PasswordSalt = new byte[] { 12, 153, 20, 134, 170, 171, 165, 140, 20, 130, 125, 143, 140, 21, 46, 109, 160, 214, 38, 162, 239, 176, 41, 185, 177, 251, 151, 69, 219, 219, 60, 41, 170, 152, 207, 251, 56, 70, 230, 216, 162, 4, 112, 110, 223, 111, 1, 101, 255, 219, 199, 17, 76, 250, 253, 104, 209, 67, 190, 92, 14, 165, 66, 176, 97, 124, 83, 173, 84, 28, 152, 81, 214, 214, 8, 27, 140, 71, 168, 23, 48, 102, 80, 97, 167, 49, 211, 119, 229, 247, 84, 234, 233, 247, 224, 171, 74, 216, 6, 248, 236, 249, 185, 160, 48, 95, 250, 44, 112, 16, 51, 17, 213, 91, 189, 175, 93, 154, 131, 248, 36, 153, 134, 35, 158, 144, 16, 124 },
                             UserName = "admin"
                         });
                 });
@@ -114,6 +131,21 @@ namespace CompanyWatchListCore.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CompanyWatchListEF.Entities.UserWatchlist", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("UserId", "CompanyId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("UserWatchlists");
+                });
+
             modelBuilder.Entity("CompanyWatchListEF.Entities.UserRole", b =>
                 {
                     b.HasOne("CompanyWatchListEF.Entities.Role", "Role")
@@ -124,6 +156,21 @@ namespace CompanyWatchListCore.Migrations
 
                     b.HasOne("CompanyWatchListEF.Entities.User", "User")
                         .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CompanyWatchListEF.Entities.UserWatchlist", b =>
+                {
+                    b.HasOne("CompanyWatchListEF.Entities.Company", "Company")
+                        .WithMany("UserWatchlist")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CompanyWatchListEF.Entities.User", "User")
+                        .WithMany("UserWatchlist")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

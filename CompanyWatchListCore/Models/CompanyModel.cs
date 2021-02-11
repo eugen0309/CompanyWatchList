@@ -1,6 +1,6 @@
 ﻿namespace CompanyWatchListCore.Models
 {
-    public class CompanyModel
+    public class CompanyDetailsModel
     {
         public string Symbol { get; set; }
         public string AssetType { get; set; }

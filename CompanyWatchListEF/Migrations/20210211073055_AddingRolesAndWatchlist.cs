@@ -3,13 +3,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CompanyWatchListCore.Migrations
 {
-    public partial class Roles : Migration
+    public partial class AddingRolesAndWatchlist : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //migrationBuilder.DropColumn(
-            //    name: "Role",
-            //    table: "Users");
+            /*migrationBuilder.DropColumn(
+                name: "Role",
+                table: "Users");*/
+
+            migrationBuilder.CreateTable(
+                name: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Symbol = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
@@ -24,6 +37,30 @@ namespace CompanyWatchListCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserWatchlists",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false),
+                    CompanyId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserWatchlists", x => new { x.UserId, x.CompanyId });
+                    table.ForeignKey(
+                        name: "FK_UserWatchlists_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserWatchlists_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,19 +90,34 @@ namespace CompanyWatchListCore.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "0d5901eb-094c-4e91-877f-94f1f7b58943", "Admin", "ADMIN" });
+                values: new object[] { 1, "98566893-4561-4098-bdb7-ae2cb177c650", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 2, "9ef50e8c-7f66-46fb-8774-bae185f7bf30", "User", "USER" });
+                values: new object[] { 2, "2b579ea8-6204-43ac-b8a9-d423770dbd25", "User", "USER" });
 
             migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "PasswordHash", "PasswordSalt" },
-                values: new object[] { new byte[] { 97, 152, 170, 109, 61, 255, 202, 252, 25, 73, 247, 74, 254, 213, 212, 190, 37, 136, 30, 35, 103, 225, 27, 135, 0, 91, 40, 103, 39, 195, 105, 243, 88, 44, 246, 149, 17, 239, 84, 80, 231, 229, 6, 14, 192, 251, 164, 109, 228, 186, 147, 36, 86, 115, 72, 133, 237, 22, 14, 142, 92, 96, 176, 111 }, new byte[] { 194, 24, 115, 126, 1, 157, 168, 80, 116, 131, 94, 214, 119, 214, 130, 160, 210, 232, 140, 62, 241, 62, 47, 82, 75, 37, 120, 84, 251, 43, 44, 39, 128, 166, 85, 171, 48, 2, 171, 114, 237, 233, 174, 33, 194, 231, 168, 3, 189, 105, 106, 204, 158, 179, 202, 83, 230, 248, 211, 105, 21, 187, 35, 30, 16, 219, 80, 10, 117, 86, 51, 163, 187, 171, 18, 109, 167, 218, 119, 210, 42, 208, 67, 204, 19, 61, 19, 122, 91, 133, 230, 78, 181, 176, 63, 114, 36, 125, 219, 0, 246, 138, 70, 68, 86, 53, 114, 238, 254, 153, 133, 145, 88, 209, 149, 234, 175, 30, 166, 146, 69, 202, 118, 236, 225, 106, 180, 123 } });
+                values: new object[] { new byte[] { 52, 223, 125, 102, 8, 60, 231, 204, 180, 146, 188, 99, 176, 43, 247, 37, 37, 136, 140, 65, 254, 239, 11, 118, 190, 194, 130, 198, 107, 11, 173, 236, 47, 32, 135, 100, 252, 252, 77, 76, 132, 118, 66, 242, 216, 203, 229, 197, 13, 48, 148, 4, 152, 90, 117, 67, 159, 217, 101, 252, 152, 152, 241, 131 }, new byte[] { 252, 36, 215, 78, 58, 165, 144, 216, 252, 170, 96, 174, 14, 68, 127, 89, 236, 249, 36, 205, 172, 231, 123, 213, 84, 60, 232, 137, 171, 87, 103, 149, 6, 80, 22, 127, 44, 79, 45, 133, 160, 136, 254, 38, 190, 27, 228, 30, 159, 96, 32, 205, 67, 11, 89, 59, 10, 89, 240, 12, 43, 9, 205, 197, 31, 120, 29, 240, 122, 140, 126, 104, 174, 81, 236, 40, 224, 76, 255, 171, 118, 252, 239, 241, 142, 221, 191, 17, 124, 149, 225, 143, 85, 199, 171, 81, 164, 169, 171, 12, 174, 189, 218, 221, 245, 188, 191, 22, 154, 251, 66, 84, 49, 14, 210, 235, 140, 150, 253, 59, 43, 226, 200, 165, 224, 206, 167, 131 } });
+
+            migrationBuilder.InsertData(
+                table: "UserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[] { 1, 1 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserWatchlists_CompanyId",
+                table: "UserWatchlists",
+                column: "CompanyId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -74,14 +126,20 @@ namespace CompanyWatchListCore.Migrations
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
+                name: "UserWatchlists");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
 
-           /* migrationBuilder.AddColumn<string>(
+            migrationBuilder.DropTable(
+                name: "Companies");
+
+            migrationBuilder.AddColumn<string>(
                 name: "Role",
                 table: "Users",
                 type: "TEXT",
                 nullable: true);
-                */
+
             migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "Id",
