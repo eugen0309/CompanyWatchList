@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 
 namespace CompanyWatchList.Controllers
 {
@@ -55,13 +56,14 @@ namespace CompanyWatchList.Controllers
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var tokenString = tokenHandler.WriteToken(token);
-
+                var roles = user.UserRoles.Select(ur => ur.Role).ToList();
                 return Ok(new
                 {
                     user.Id,
                     user.UserName,
                     user.FirstName,
                     user.LastName,
+                    roles,
                     Token = tokenString
                 });
             }
