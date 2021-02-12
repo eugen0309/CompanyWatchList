@@ -15,10 +15,10 @@ export const PrivateRoute = ({ component: Component, roles, ...rest }) => (
           />
         );
       }
-      var userRoles = currentUser.roles.map((r) => r.name);
+
       if (
         roles &&
-        roles.filter((value) => userRoles.includes(value)).length === 0
+        roles.filter((value) => currentUser.roles.includes(value)).length === 0
       ) {
         return <Redirect to={{ pathname: "/" }} />;
       }

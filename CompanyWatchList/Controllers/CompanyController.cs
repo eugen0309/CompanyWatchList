@@ -79,13 +79,12 @@ namespace CompanyWatchList.Controllers
         }
 
         [HttpPost("follow")]
-        public async Task<IActionResult> AddCompanyToWatchList([FromBody] CompanySearchResultModel companySearchResult)
+        public async Task<IActionResult> AddCompanyToWatchList([FromBody] FollowRequestModel company)
         {
             try
             {
                 var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
-                var user = _userService.GetByUserName(userName);
-                var company = _mapper.Map<Company>(companySearchResult);
+                var user = _userService.GetByUserName(userName);                
                 await _watchlistService.AddCompanyToWatchListAsync(user.Id, company.Name, company.Symbol);
                 return Ok();
             }

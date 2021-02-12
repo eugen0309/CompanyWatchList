@@ -17,7 +17,7 @@ export function MainApp(props) {
   useEffect(() => {
     authenticationService.currentUser.subscribe((x) => {
       setCurrentUser(x);
-      setIsAdmin(x && x.roles.some((r) => r.name === Role.Admin));
+      setIsAdmin(x && x.roles.some((r) => r === Role.Admin));
     });
   }, []);
 
@@ -47,20 +47,18 @@ export function MainApp(props) {
           </nav>
         )}
         <div className="jumbotron">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6 offset-md-3">
-                <Switch>
-                  <PrivateRoute exact path="/" component={HomePage} />
-                  <PrivateRoute
-                    path="/admin"
-                    roles={[Role.Admin]}
-                    component={AdminPage}
-                  />
-                  <Route exact path="/login" component={LoginPage} />
-                  <Route path="*" component={NotFoundPage} />
-                </Switch>
-              </div>
+          <div className="row">
+            <div className="col-lg-10">
+              <Switch>
+                <PrivateRoute exact path="/" component={HomePage} />
+                <PrivateRoute
+                  path="/admin"
+                  roles={[Role.Admin]}
+                  component={AdminPage}
+                />
+                <Route exact path="/login" component={LoginPage} />
+                <Route path="*" component={NotFoundPage} />
+              </Switch>
             </div>
           </div>
         </div>

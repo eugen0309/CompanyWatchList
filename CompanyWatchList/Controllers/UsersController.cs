@@ -56,7 +56,7 @@ namespace CompanyWatchList.Controllers
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var tokenString = tokenHandler.WriteToken(token);
-                var roles = user.UserRoles.Select(ur => ur.Role).ToList();
+                var roles = user.UserRoles.Select(ur => ur.Role).Select(r => r.Name).ToList();
                 return Ok(new
                 {
                     user.Id,
