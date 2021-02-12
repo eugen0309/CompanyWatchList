@@ -52,7 +52,11 @@ export function MainApp(props) {
               <div className="col-md-6 offset-md-3">
                 <Switch>
                   <PrivateRoute exact path="/" component={HomePage} />
-                  <PrivateRoute path="/admin" component={AdminPage} />
+                  <PrivateRoute
+                    path="/admin"
+                    roles={[Role.Admin]}
+                    component={AdminPage}
+                  />
                   <Route exact path="/login" component={LoginPage} />
                   <Route path="*" component={NotFoundPage} />
                 </Switch>
