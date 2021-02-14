@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using CompanyWatchListCore.Models;
 using CompanyWatchListCore.Services;
 using CompanyWatchListEF.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,7 @@ namespace CompanyWatchList.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IWatchlistService _watchlistService;
         private readonly ICompanyService _companyService;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
@@ -28,13 +30,15 @@ namespace CompanyWatchList.Controllers
 
         public CompanyController
                (IUserService userService, 
-                ICompanyService companyService, 
+                IWatchlistService watchlistService, 
+                ICompanyService companyService,
                 IConfiguration config, 
                 IMapper mapper, 
                 ILogger<CompanyController> logger,
                 IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
+            _watchlistService = watchlistService;
             _companyService = companyService;
             _config = config;
             _mapper = mapper;
@@ -42,12 +46,86 @@ namespace CompanyWatchList.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [HttpGet]
-        public ICollection<Company> GetWatchList()
+        [HttpGet]        
+        public IActionResult GetWatchList()
         {
-            var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userId = _userService.GetByUserName(userName);
-            return _companyService.GetUserWatchlist(userId);
+            try
+            {
+                var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+                var user = _userService.GetByUserName(userName);
+                IEnumerable<Company> result = _watchlistService.GetUserWatchlist(user.Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
         }
+
+        [HttpGet("search/{keywords}")]
+        public async Task<IActionResult> Search(string keywords)
+        {
+            try
+            {
+                IEnumerable<CompanySearchResultModel> result = await _companyService.SearchCompanies(keywords);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("details/{symbol}")]
+        public async Task<IActionResult> GetDetails(string symbol)
+        {
+            try
+            {
+                CompanyDetailsModel result = await _companyService.GetCompanyDetails(symbol);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("follow")]
+        public async Task<IActionResult> AddCompanyToWatchList([FromBody] FollowRequestModel company)
+        {
+            try
+            {
+                var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+                var user = _userService.GetByUserName(userName);                
+                await _watchlistService.AddCompanyToWatchListAsync(user.Id, company.Name, company.Symbol);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete("unfollow/{id:int}")]
+        public async Task<IActionResult> RemoveCompanyFromWatchlistAsync(int id)
+        {
+            try
+            {
+                var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+                var user = _userService.GetByUserName(userName);
+                await _watchlistService.RemoveCompanyFromWatchlistAsync(user.Id, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
+        }
+
     }
 }

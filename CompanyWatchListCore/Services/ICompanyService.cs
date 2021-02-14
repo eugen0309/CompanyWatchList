@@ -1,10 +1,12 @@
-﻿using CompanyWatchListEF.Entities;
+﻿using CompanyWatchListCore.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CompanyWatchListCore.Services
 {
     public interface ICompanyService
     {
-        IEnumerable<Company> GetUserWatchlist(int userId);
+        Task<IEnumerable<CompanySearchResultModel>> SearchCompanies(string keywords);
+        Task<CompanyDetailsModel> GetCompanyDetails(string symbol);
     }
 }

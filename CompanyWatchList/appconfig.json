@@ -2,5 +2,7 @@
   "ConnectionStrings": {
     "CompanyWatchListDb": "Data Source=CompanyWatchList.db"
   },
-  "Secret":  "Th!s !s my s3cr3t k3y for th!s Comp@ny W@tchl1st @ppl!c@t!on"
+  "Secret": "Th!s !s my s3cr3t k3y for th!s Comp@ny W@tchl1st @ppl!c@t!on",
+  "AlphaVantageBaseUrl":  "https://www.alphavantage.co/query",
+  "AlphaVantageApiKey": "K8BEW9FT6XSKYC7D"
 }

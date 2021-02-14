@@ -27,6 +27,18 @@ namespace CompanyWatchListEF
                     .HasForeignKey(ur => ur.UserId);
             });
 
+            builder.Entity<UserWatchlist>(userWatchlist =>
+            {
+                userWatchlist.HasKey(uwl => new { uwl.UserId, uwl.CompanyId });
+                userWatchlist.HasOne(uc => uc.Company)
+                    .WithMany(c => c.UserWatchlist)
+                    .HasForeignKey(uw => uw.CompanyId);
+
+                userWatchlist.HasOne(ur => ur.User)
+                    .WithMany(u => u.UserWatchlist)
+                    .HasForeignKey(ur => ur.UserId);
+            });
+
             builder.Entity<Role>().HasData(new Role[]
             {
                 new Role()
