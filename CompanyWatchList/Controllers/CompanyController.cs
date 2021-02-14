@@ -78,14 +78,28 @@ namespace CompanyWatchList.Controllers
             }
         }
 
+        [HttpGet("details/{symbol}")]
+        public async Task<IActionResult> GetDetails(string symbol)
+        {
+            try
+            {
+                CompanyDetailsModel result = await _companyService.GetCompanyDetails(symbol);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
+        }
+
         [HttpPost("follow")]
-        public async Task<IActionResult> AddCompanyToWatchList([FromBody] CompanySearchResultModel companySearchResult)
+        public async Task<IActionResult> AddCompanyToWatchList([FromBody] FollowRequestModel company)
         {
             try
             {
                 var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
-                var user = _userService.GetByUserName(userName);
-                var company = _mapper.Map<Company>(companySearchResult);
+                var user = _userService.GetByUserName(userName);                
                 await _watchlistService.AddCompanyToWatchListAsync(user.Id, company.Name, company.Symbol);
                 return Ok();
             }

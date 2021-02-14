@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 
 namespace CompanyWatchList.Controllers
 {
@@ -55,13 +56,14 @@ namespace CompanyWatchList.Controllers
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var tokenString = tokenHandler.WriteToken(token);
-
+                var roles = user.UserRoles.Select(ur => ur.Role).Select(r => r.Name).ToList();
                 return Ok(new
                 {
                     user.Id,
                     user.UserName,
                     user.FirstName,
                     user.LastName,
+                    roles,
                     Token = tokenString
                 });
             }
@@ -113,6 +115,29 @@ namespace CompanyWatchList.Controllers
             try
             {
                 var user = _userService.GetById(id);
+                if (user != null)
+                {
+                    var model = _mapper.Map<UserModel>(user);
+                    return Ok(model);
+                }
+                else
+                {
+                    return NotFound("The required user was not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return NotFound();
+            }
+        }
+
+        [HttpGet("{name}")]
+        public IActionResult GetByName(string name)
+        {
+            try
+            {
+                var user = _userService.GetByUserName(name);
                 if (user != null)
                 {
                     var model = _mapper.Map<UserModel>(user);

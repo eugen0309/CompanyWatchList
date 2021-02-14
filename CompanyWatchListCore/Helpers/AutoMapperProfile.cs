@@ -11,7 +11,7 @@ namespace CompanyWatchListCore.Helpers
             CreateMap<User, UserModel>();
             CreateMap<RegistrationModel, User>()
                 .ForMember(dst => dst.UserRoles, opt => opt.Ignore());
-            CreateMap<CompanySearchResultModel, Company>();                                
+            //CreateMap<CompanySearchResultModel, Company>();                                
         }
     }
 }

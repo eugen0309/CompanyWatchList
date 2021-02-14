@@ -79,9 +79,17 @@ namespace CompanyWatchListCore.Services
         public async Task<bool> DeleteAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
+
+            //await _context.SaveChangesAsync();
+
             if (user != null)
             {
-                await _context.Users.AddAsync(user);
+                var watchList = _context.UserWatchlists.Where(wl => wl.UserId == id).ToList();
+                foreach (var item in watchList)
+                {
+                    _context.UserWatchlists.Remove(item);
+                }
+                _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
                 return true;
             }
