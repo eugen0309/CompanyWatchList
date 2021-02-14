@@ -36,8 +36,8 @@ export function MainApp(props) {
                 Home
               </NavLink>
               {isAdmin && (
-                <NavLink to="/admin" className="nav-item nav-link">
-                  Admin
+                <NavLink to="/users" className="nav-item nav-link">
+                  Users
                 </NavLink>
               )}
               <a onClick={logout} className="nav-item nav-link">
@@ -52,7 +52,7 @@ export function MainApp(props) {
               <Switch>
                 <PrivateRoute exact path="/" component={HomePage} />
                 <PrivateRoute
-                  path="/admin"
+                  path="/users"
                   roles={[Role.Admin]}
                   component={AdminPage}
                 />

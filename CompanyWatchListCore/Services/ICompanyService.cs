@@ -7,5 +7,6 @@ namespace CompanyWatchListCore.Services
     public interface ICompanyService
     {
         Task<IEnumerable<CompanySearchResultModel>> SearchCompanies(string keywords);
+        Task<CompanyDetailsModel> GetCompanyDetails(string symbol);
     }
 }

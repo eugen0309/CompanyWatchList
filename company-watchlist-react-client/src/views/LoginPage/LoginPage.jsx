@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, message } from "antd";
 import "antd/dist/antd.css";
 import { authenticationService } from "../../services/authenticationService";
 
@@ -27,12 +27,11 @@ export function LoginPage(props) {
 
   const onFinish = async (values) => {
     await authenticationService.login(values["username"], values["password"]);
+
     props.history.push("/");
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+  const onFinishFailed = (errorInfo) => {};
 
   return (
     <Form
@@ -41,7 +40,7 @@ export function LoginPage(props) {
       initialValues={{
         remember: true,
       }}
-      onFinish={onFinish}
+      onFinish={async (values) => await onFinish(values)}
       onFinishFailed={onFinishFailed}
     >
       <Form.Item

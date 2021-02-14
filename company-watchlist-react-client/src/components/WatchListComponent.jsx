@@ -1,10 +1,12 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Table, Button, message } from "antd";
+import { Table, Button, message, Modal } from "antd";
 import { watchlistService } from "../services/watchlistService";
 
 export default function WatchListComponent(props) {
   const [tableData, setTableData] = useState([]);
-  //const [watchListChanged, setWatchListChanged] = useState(false);
+  const [detailsModalVisible, setDetailsModalVisible] = useState(false);
+  const [companyDetails, setCompanyDetails] = useState();
+
   useEffect(() => {
     async function populateWatchList() {
       const items = await watchlistService.getAll();
@@ -42,7 +44,10 @@ export default function WatchListComponent(props) {
       key: "add",
       render: (text, record) => {
         return (
-          <Button onClick={async () => {}} type="primary">
+          <Button
+            onClick={async () => await showCompanyDetails(record.symbol)}
+            type="primary"
+          >
             Show details
           </Button>
         );
@@ -69,9 +74,34 @@ export default function WatchListComponent(props) {
     },
   ];
 
+  async function showCompanyDetails(symbol) {
+    const details = await watchlistService.getDetails(symbol);
+    setCompanyDetails(details);
+    setDetailsModalVisible(true);
+  }
+
   return (
     <Fragment>
       <Table columns={columns} dataSource={tableData}></Table>
+      <Modal
+        onOk={() => setDetailsModalVisible(false)}
+        visible={detailsModalVisible}
+        onCancel={() => setDetailsModalVisible(false)}
+        destroyOnClose
+      >
+        {companyDetails ? (
+          Object.keys(companyDetails).map((item) => {
+            return (
+              <div>
+                <h3>{item.toUpperCase()}</h3>
+                <p>{companyDetails[item]}</p>
+              </div>
+            );
+          })
+        ) : (
+          <> </>
+        )}
+      </Modal>
     </Fragment>
   );
 }

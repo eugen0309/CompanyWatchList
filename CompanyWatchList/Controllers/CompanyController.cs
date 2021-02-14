@@ -78,6 +78,21 @@ namespace CompanyWatchList.Controllers
             }
         }
 
+        [HttpGet("details/{symbol}")]
+        public async Task<IActionResult> GetDetails(string symbol)
+        {
+            try
+            {
+                CompanyDetailsModel result = await _companyService.GetCompanyDetails(symbol);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
+        }
+
         [HttpPost("follow")]
         public async Task<IActionResult> AddCompanyToWatchList([FromBody] FollowRequestModel company)
         {

@@ -22,6 +22,27 @@ namespace CompanyWatchListCore.Services
             _baseAddress = config.GetSection("AlphaVantageBaseUrl").Value;
             _apiKey = config.GetSection("AlphaVantageApiKey").Value;
         }
+
+        public async Task<CompanyDetailsModel> GetCompanyDetails(string symbol)
+        {
+            var client = _clientFactory.CreateClient();
+            client.BaseAddress = new Uri(_baseAddress);
+            var queryString = new Dictionary<string, string>()
+            {
+                { "function", "OVERVIEW" },
+                { "symbol", symbol },
+                { "apikey", _apiKey },                
+            };
+            var requestUri = QueryHelpers.AddQueryString(_baseAddress, queryString);
+            var request = new HttpRequestMessage(HttpMethod.Get,
+                new Uri(requestUri));
+            var response = await client.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
+
+            var result = JsonConvert.DeserializeObject<CompanyDetailsModel>(content);
+            return result;
+        }
+
         public async Task<IEnumerable<CompanySearchResultModel>> SearchCompanies(string keywords)
         {
             var client = _clientFactory.CreateClient();

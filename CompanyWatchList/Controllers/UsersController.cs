@@ -132,6 +132,29 @@ namespace CompanyWatchList.Controllers
             }
         }
 
+        [HttpGet("{name}")]
+        public IActionResult GetByName(string name)
+        {
+            try
+            {
+                var user = _userService.GetByUserName(name);
+                if (user != null)
+                {
+                    var model = _mapper.Map<UserModel>(user);
+                    return Ok(model);
+                }
+                else
+                {
+                    return NotFound("The required user was not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return NotFound();
+            }
+        }
+
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAsync(int id)
