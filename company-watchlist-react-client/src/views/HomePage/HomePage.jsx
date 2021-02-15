@@ -14,6 +14,7 @@ function HomePage(props) {
   const [userFromApi, setUserFromApi] = useState();
   const [watchList, setWatchList] = useState();
   const [watchListChanged, setWatchListChanged] = useState(false);
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     async function getUserFromApi() {
@@ -49,6 +50,8 @@ function HomePage(props) {
         setWatchList={setWatchList}
         watchListChanged={watchListChanged}
         setWatchListChanged={setWatchListChanged}
+        keyword={keyword}
+        setKeyword={setKeyword}
         removeFromWatchlist={(company) => removeFromWatchlist(company)}
       />
       <br></br>
@@ -58,6 +61,8 @@ function HomePage(props) {
         setWatchList={setWatchList}
         watchListChanged={watchListChanged}
         setWatchListChanged={setWatchListChanged}
+        keyword={keyword}
+        setKeyword={setKeyword}
         removeFromWatchlist={(company) => removeFromWatchlist(company)}
       />
       <br></br>

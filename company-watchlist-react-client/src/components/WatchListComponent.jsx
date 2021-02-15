@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Table, Button, message, Modal } from "antd";
 import { watchlistService } from "../services/watchlistService";
+import { camelCaseToWords } from "../helpers/string-utility";
 
 export default function WatchListComponent(props) {
   const [tableData, setTableData] = useState([]);
@@ -40,7 +41,7 @@ export default function WatchListComponent(props) {
       render: (text) => text,
     },
     {
-      title: "Show details",
+      title: "Show overview",
       key: "add",
       render: (text, record) => {
         return (
@@ -48,7 +49,21 @@ export default function WatchListComponent(props) {
             onClick={async () => await showCompanyDetails(record.symbol)}
             type="primary"
           >
-            Show details
+            Show overview
+          </Button>
+        );
+      },
+    },
+    {
+      title: "Search details",
+      key: "add",
+      render: (text, record) => {
+        return (
+          <Button
+            onClick={() => props.setKeyword(record.symbol)}
+            type="primary"
+          >
+            Search details
           </Button>
         );
       },
@@ -93,7 +108,7 @@ export default function WatchListComponent(props) {
           Object.keys(companyDetails).map((item) => {
             return (
               <div>
-                <h3>{item.toUpperCase()}</h3>
+                <h3>{camelCaseToWords(item)}</h3>
                 <p>{companyDetails[item]}</p>
               </div>
             );

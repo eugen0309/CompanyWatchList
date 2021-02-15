@@ -2,13 +2,17 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Input, Table, Button, message, Row } from "antd";
 import { watchlistService } from "../services/watchlistService";
 export default function SearchComponent(props) {
-  const [keyword, setKeyword] = useState("");
+  //const [keyword, setKeyword] = useState("");
   const [tableData, setTableData] = useState([]);
   //const [watchListChanged, setWatchListChanged] = useState(true);
 
   useEffect(() => {
     const delaySearchFn = setTimeout(async () => {
-      if (keyword === null || keyword === undefined || keyword === "") {
+      if (
+        props.keyword === null ||
+        props.keyword === undefined ||
+        props.keyword === ""
+      ) {
         setTableData([]);
         return;
       }
@@ -22,7 +26,7 @@ export default function SearchComponent(props) {
         return;
       }
 
-      const searchResult = await watchlistService.searchCompany(keyword);
+      const searchResult = await watchlistService.searchCompany(props.keyword);
       if (searchResult === undefined) {
         return;
       }
@@ -45,7 +49,12 @@ export default function SearchComponent(props) {
       setTableData(tempTableData);
     }, 800);
     return () => clearTimeout(delaySearchFn);
-  }, [keyword, props.watchListChanged, props.setWatchList, props.watchList]);
+  }, [
+    props.keyword,
+    props.watchListChanged,
+    props.setWatchList,
+    props.watchList,
+  ]);
 
   const columns = [
     {
@@ -146,7 +155,7 @@ export default function SearchComponent(props) {
           allowClear
           style={{ width: 500 }}
           placeholder="Search companies"
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={(e) => props.setKeyword(e.target.value)}
         ></Input>
       </Row>
       {tableData.length > 0 ? (
